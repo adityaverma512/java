@@ -1,4 +1,4 @@
-package com.example.gradle.fiegnClient;
+package com.example.gradle.feignClient;
 import com.example.gradle.DTO.EmailDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
