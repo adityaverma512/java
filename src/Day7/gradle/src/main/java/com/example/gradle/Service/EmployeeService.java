@@ -1,5 +1,6 @@
 package com.example.gradle.Service;
 
+import com.example.gradle.DTO.EmailDto;
 import com.example.gradle.DTO.EmployeeDto;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,5 +18,7 @@ public interface EmployeeService {
     Optional<EmployeeDto> getEmployeeByEmail(String email);
     List<EmployeeDto> getEmployeesByDepartment(String department);
     List<EmployeeDto> getTop3HighestPaidEmployees();
-
+    public String emailByFiegnClient(EmailDto emailDto);
+    String emailByRestTemplate(EmailDto emailDto);
+    String emailByWebClient(EmailDto emailDto);
 }
