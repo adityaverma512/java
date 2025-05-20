@@ -106,7 +106,7 @@ public class EmployeeController {
     @PostMapping("/send")
     public ResponseEntity<String> sendEmail(@RequestBody EmailDto dto) {
         logger.info("Sending email using Feign client: {}", dto);
-        String response = service.emailByFiegnClient(dto);
+        String response = service.emailByFeignClient(dto);
         logger.info("Email sent response: {}", response);
         return ResponseEntity.ok(response);
     }

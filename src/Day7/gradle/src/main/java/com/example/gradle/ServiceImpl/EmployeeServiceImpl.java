@@ -8,7 +8,7 @@ import com.example.gradle.Exceptions.InvalidFileFormatException;
 import com.example.gradle.Mapper.EmployeeMapper;
 import com.example.gradle.Repository.EmployeeRepository;
 import com.example.gradle.Service.EmployeeService;
-import com.example.gradle.fiegnClient.EmailFeignClient;
+import com.example.gradle.feignClient.EmailFeignClient;
 import jakarta.transaction.Transactional;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -114,7 +114,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public String emailByFiegnClient(EmailDto emailDto) {
+    public String emailByFeignClient(EmailDto emailDto) {
         logger.info("Sending email to: {}", emailDto.getTo());
         String response = emailFeignClient.sendEmail(emailDto);
         logger.info("Email sent, response: {}", response);
