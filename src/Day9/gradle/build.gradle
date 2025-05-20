@@ -1,0 +1,54 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.5'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// Core app dependencies
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'com.h2database:h2'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.apache.poi:poi:5.2.3'
+	implementation 'org.apache.poi:poi-ooxml:5.2.3'
+	runtimeOnly 'org.postgresql:postgresql'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.2.1'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// OpenAPI docs
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+	// --- Testing Dependencies ---
+
+	// Includes: JUnit, Mockito, Spring Boot test annotations like @SpringBootTest, @MockBean, etc.
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// Optional: Useful if you directly want Mockito Core (already included above, but you can make it explicit)
+	testImplementation 'org.mockito:mockito-core'
+
+	// Optional: Use Testcontainers for advanced integration testing (e.g., with real DBs)
+	testImplementation 'org.testcontainers:junit-jupiter'
+
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
