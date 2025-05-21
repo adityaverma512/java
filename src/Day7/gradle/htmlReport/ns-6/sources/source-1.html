@@ -1,0 +1,448 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > EmployeeServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.gradle.ServiceImpl</a>
+</div>
+
+<h1>Coverage Summary for Class: EmployeeServiceImpl (com.example.gradle.ServiceImpl)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EmployeeServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    65%
+  </span>
+  <span class="absValue">
+    (13/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    38.6%
+  </span>
+  <span class="absValue">
+    (22/57)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    59.9%
+  </span>
+  <span class="absValue">
+    (91/152)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">EmployeeServiceImpl$$SpringCGLIB$$0</td>
+  </tr>
+  <tr>
+    <td class="name">EmployeeServiceImpl$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    61.9%
+  </span>
+  <span class="absValue">
+    (13/21)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    38.6%
+  </span>
+  <span class="absValue">
+    (22/57)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    59.5%
+  </span>
+  <span class="absValue">
+    (91/153)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.gradle.ServiceImpl;
+&nbsp;
+&nbsp;import com.example.gradle.DTO.EmailDto;
+&nbsp;import com.example.gradle.DTO.EmployeeDto;
+&nbsp;import com.example.gradle.Entity.Employee;
+&nbsp;import com.example.gradle.Exceptions.EmployeeNotFoundException;
+&nbsp;import com.example.gradle.Exceptions.InvalidFileFormatException;
+&nbsp;import com.example.gradle.Exceptions.InvalidFileHeaderException;
+&nbsp;import com.example.gradle.Mapper.EmployeeMapper;
+&nbsp;import com.example.gradle.Repository.EmployeeRepository;
+&nbsp;import com.example.gradle.Service.EmployeeService;
+&nbsp;import com.example.gradle.fiegnClient.EmailFeignClient;
+&nbsp;import jakarta.transaction.Transactional;
+&nbsp;import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+&nbsp;import org.apache.poi.ss.usermodel.*;
+&nbsp;import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.web.client.RestTemplate;
+&nbsp;import org.springframework.web.multipart.MultipartFile;
+&nbsp;import org.springframework.web.reactive.function.client.WebClient;
+&nbsp;
+&nbsp;import java.io.BufferedReader;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.io.InputStreamReader;
+&nbsp;import java.util.*;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class EmployeeServiceImpl implements EmployeeService {
+&nbsp;
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);</b>
+&nbsp;
+&nbsp;    private final EmployeeRepository repository;
+&nbsp;    private final EmailFeignClient emailFeignClient;
+&nbsp;    private final RestTemplate restTemplate;
+&nbsp;    private final WebClient emailWebClient;
+&nbsp;    @Value(&quot;${email.service.url:http://localhost:8081}&quot;)
+&nbsp;    private String emailServiceUrl;
+<b class="fc">&nbsp;    public EmployeeServiceImpl(EmployeeRepository repository, EmailFeignClient emailFeignClient,RestTemplate restTemplate,WebClient emailWebClient) {</b>
+<b class="fc">&nbsp;        this.repository = repository;</b>
+<b class="fc">&nbsp;        this.emailFeignClient = emailFeignClient;</b>
+<b class="fc">&nbsp;        this.restTemplate=restTemplate;</b>
+<b class="fc">&nbsp;        this.emailWebClient=emailWebClient;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional
+&nbsp;    public EmployeeDto addEmployee(EmployeeDto employeeDto) {
+<b class="fc">&nbsp;        logger.info(&quot;Adding new employee: {}&quot;, employeeDto);</b>
+<b class="fc">&nbsp;        Employee employee = EmployeeMapper.toEntity(employeeDto);</b>
+<b class="fc">&nbsp;        Employee saved = repository.save(employee);</b>
+<b class="fc">&nbsp;        logger.info(&quot;Employee saved with ID: {}&quot;, saved.getId());</b>
+<b class="fc">&nbsp;        return EmployeeMapper.toDto(saved);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;EmployeeDto&gt; getAllEmployees() {
+<b class="fc">&nbsp;        logger.info(&quot;Fetching all employees&quot;);</b>
+<b class="fc">&nbsp;        List&lt;EmployeeDto&gt; employees = repository.findAll()</b>
+<b class="fc">&nbsp;                .stream()</b>
+<b class="fc">&nbsp;                .map(EmployeeMapper::toDto)</b>
+<b class="fc">&nbsp;                .collect(Collectors.toList());</b>
+<b class="fc">&nbsp;        logger.info(&quot;Total employees fetched: {}&quot;, employees.size());</b>
+<b class="fc">&nbsp;        return employees;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public EmployeeDto getEmployeeById(Long id) {
+<b class="fc">&nbsp;        logger.info(&quot;Fetching employee by ID: {}&quot;, id);</b>
+<b class="fc">&nbsp;        Employee employee = repository.findById(id)</b>
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; {</b>
+<b class="fc">&nbsp;                    logger.warn(&quot;Employee with ID {} not found&quot;, id);</b>
+<b class="fc">&nbsp;                    return new EmployeeNotFoundException(&quot;Employee with ID &quot; + id + &quot; not found&quot;);</b>
+&nbsp;                });
+<b class="fc">&nbsp;        logger.info(&quot;Employee found: {}&quot;, employee);</b>
+<b class="fc">&nbsp;        return EmployeeMapper.toDto(employee);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional
+&nbsp;    public EmployeeDto updateEmployee(Long id, EmployeeDto employeeDto) {
+<b class="fc">&nbsp;        logger.info(&quot;Updating employee with ID: {}&quot;, id);</b>
+<b class="fc">&nbsp;        Employee employee = repository.findById(id)</b>
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; {</b>
+<b class="nc">&nbsp;                    logger.warn(&quot;Employee with ID {} not found for update&quot;, id);</b>
+<b class="nc">&nbsp;                    return new EmployeeNotFoundException(&quot;Employee with ID &quot; + id + &quot; not found&quot;);</b>
+&nbsp;                });
+&nbsp;
+&nbsp;        // Update fields
+<b class="pc">&nbsp;        if (employeeDto.getName() != null) employee.setName(employeeDto.getName());</b>
+<b class="fc">&nbsp;        if (employeeDto.getEmail() != null) employee.setEmail(employeeDto.getEmail());</b>
+<b class="fc">&nbsp;        if (employeeDto.getDepartment() != null) employee.setDepartment(employeeDto.getDepartment());</b>
+<b class="fc">&nbsp;        if (employeeDto.getSalary() != null) employee.setSalary(employeeDto.getSalary());</b>
+&nbsp;
+<b class="fc">&nbsp;        Employee updated = repository.save(employee);</b>
+<b class="fc">&nbsp;        logger.info(&quot;Employee updated: {}&quot;, updated);</b>
+<b class="fc">&nbsp;        return EmployeeMapper.toDto(updated);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional
+&nbsp;    public void deleteEmployee(Long id) {
+<b class="fc">&nbsp;        logger.info(&quot;Deleting employee with ID: {}&quot;, id);</b>
+<b class="fc">&nbsp;        Employee employee = repository.findById(id)</b>
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; {</b>
+<b class="nc">&nbsp;                    logger.warn(&quot;Employee with ID {} not found for deletion&quot;, id);</b>
+<b class="nc">&nbsp;                    return new EmployeeNotFoundException(&quot;Employee with ID &quot; + id + &quot; not found&quot;);</b>
+&nbsp;                });
+<b class="fc">&nbsp;        repository.delete(employee);</b>
+<b class="fc">&nbsp;        logger.info(&quot;Employee with ID {} deleted&quot;, id);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String emailByFiegnClient(EmailDto emailDto) {
+<b class="nc">&nbsp;        logger.info(&quot;Sending email to: {}&quot;, emailDto.getTo());</b>
+<b class="nc">&nbsp;        String response = emailFeignClient.sendEmail(emailDto);</b>
+<b class="nc">&nbsp;        logger.info(&quot;Email sent, response: {}&quot;, response);</b>
+<b class="nc">&nbsp;        return response;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String emailByRestTemplate(EmailDto emailDto) {
+<b class="nc">&nbsp;        logger.info(&quot;Sending email via RestTemplate to: {}, subject: {}&quot;, emailDto.getTo(), emailDto.getSubject());</b>
+<b class="nc">&nbsp;        String url = emailServiceUrl + &quot;/api/email/send&quot;;</b>
+<b class="nc">&nbsp;        String response = restTemplate.postForObject(url, emailDto, String.class);</b>
+<b class="nc">&nbsp;        logger.info(&quot;Response from RestTemplate email service: {}&quot;, response);</b>
+<b class="nc">&nbsp;        return response;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String emailByWebClient(EmailDto emailDto) {
+<b class="nc">&nbsp;        logger.info(&quot;Sending email via WebClient to: {}, subject: {}&quot;, emailDto.getTo(), emailDto.getSubject());</b>
+<b class="nc">&nbsp;        String response = emailWebClient.post()</b>
+<b class="nc">&nbsp;                .uri(&quot;/send&quot;)</b>
+<b class="nc">&nbsp;                .bodyValue(emailDto)</b>
+<b class="nc">&nbsp;                .retrieve()</b>
+<b class="nc">&nbsp;                .bodyToMono(String.class)</b>
+<b class="nc">&nbsp;                .block();</b>
+<b class="nc">&nbsp;        logger.info(&quot;Response from WebClient email service: {}&quot;, response);</b>
+<b class="nc">&nbsp;        return response;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Optional&lt;EmployeeDto&gt; getEmployeeByEmail(String email) {
+<b class="fc">&nbsp;        logger.info(&quot;Fetching employee by email: {}&quot;, email);</b>
+<b class="fc">&nbsp;        return repository.findByEmail(email)</b>
+<b class="fc">&nbsp;                .map(EmployeeMapper::toDto);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;EmployeeDto&gt; getEmployeesByDepartment(String department) {
+<b class="fc">&nbsp;        logger.info(&quot;Fetching employees by department: {}&quot;, department);</b>
+<b class="fc">&nbsp;        List&lt;EmployeeDto&gt; employees = repository.findByDepartment(department)</b>
+<b class="fc">&nbsp;                .stream()</b>
+<b class="fc">&nbsp;                .map(EmployeeMapper::toDto)</b>
+<b class="fc">&nbsp;                .collect(Collectors.toList());</b>
+<b class="fc">&nbsp;        logger.info(&quot;Found {} employees in department {}&quot;, employees.size(), department);</b>
+<b class="fc">&nbsp;        return employees;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;EmployeeDto&gt; getTop3HighestPaidEmployees() {
+<b class="fc">&nbsp;        logger.info(&quot;Fetching top 3 highest paid employees&quot;);</b>
+<b class="fc">&nbsp;        List&lt;EmployeeDto&gt; top3 = repository.findTop3ByOrderBySalaryDesc()</b>
+<b class="fc">&nbsp;                .stream()</b>
+<b class="fc">&nbsp;                .map(EmployeeMapper::toDto)</b>
+<b class="fc">&nbsp;                .collect(Collectors.toList());</b>
+<b class="fc">&nbsp;        logger.info(&quot;Top 3 highest paid employees retrieved&quot;);</b>
+<b class="fc">&nbsp;        return top3;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void importEmployeesFromCsv(MultipartFile file) throws IOException {
+<b class="fc">&nbsp;        String filename = file.getOriginalFilename();</b>
+<b class="fc">&nbsp;        logger.info(&quot;Importing employees from file: {}&quot;, filename);</b>
+&nbsp;
+<b class="pc">&nbsp;        if (filename == null || (!filename.endsWith(&quot;.csv&quot;) &amp;&amp; !filename.endsWith(&quot;.xls&quot;) &amp;&amp; !filename.endsWith(&quot;.xlsx&quot;))) {</b>
+<b class="fc">&nbsp;            logger.error(&quot;Invalid file format for file: {}&quot;, filename);</b>
+<b class="fc">&nbsp;            throw new InvalidFileFormatException(&quot;Only CSV or Excel (.xls/.xlsx) files are allowed&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="pc">&nbsp;        if (filename.endsWith(&quot;.csv&quot;)) {</b>
+<b class="fc">&nbsp;            parseCsv(file);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            parseExcel(file);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        logger.info(&quot;Employee import completed for file: {}&quot;, filename);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    private void parseCsv(MultipartFile file) throws IOException {
+<b class="fc">&nbsp;        logger.debug(&quot;Parsing CSV file: {}&quot;, file.getOriginalFilename());</b>
+<b class="fc">&nbsp;        List&lt;Employee&gt; employees = new ArrayList&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {</b>
+&nbsp;            String line;
+<b class="fc">&nbsp;            boolean isFirstLine = true;</b>
+&nbsp;
+<b class="fc">&nbsp;            while ((line = reader.readLine()) != null) {</b>
+<b class="fc">&nbsp;                String[] fields = line.split(&quot;,&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;                if (isFirstLine) {</b>
+<b class="fc">&nbsp;                    isFirstLine = false;</b>
+<b class="pc">&nbsp;                    if (fields.length &lt; 4 ||</b>
+<b class="pc">&nbsp;                            !fields[0].trim().equalsIgnoreCase(&quot;name&quot;) ||</b>
+<b class="pc">&nbsp;                            !fields[1].trim().equalsIgnoreCase(&quot;email&quot;) ||</b>
+<b class="pc">&nbsp;                            !fields[2].trim().equalsIgnoreCase(&quot;department&quot;) ||</b>
+<b class="pc">&nbsp;                            !fields[3].trim().equalsIgnoreCase(&quot;salary&quot;)) {</b>
+<b class="nc">&nbsp;                        throw new InvalidFileHeaderException(&quot;Invalid CSV header. Expected: name,email,department,salary&quot;);</b>
+&nbsp;                    }
+&nbsp;                    continue;
+&nbsp;                }
+&nbsp;
+<b class="fc">&nbsp;                Employee emp = new Employee();</b>
+<b class="fc">&nbsp;                emp.setName(fields[0].trim());</b>
+<b class="fc">&nbsp;                emp.setEmail(fields[1].trim());</b>
+<b class="fc">&nbsp;                emp.setDepartment(fields[2].trim());</b>
+<b class="fc">&nbsp;                emp.setSalary(Double.parseDouble(fields[3].trim()));</b>
+<b class="fc">&nbsp;                employees.add(emp);</b>
+<b class="fc">&nbsp;            }</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        repository.saveAll(employees);</b>
+<b class="fc">&nbsp;        logger.info(&quot;Parsed and saved {} employees from CSV&quot;, employees.size());</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    private void parseExcel(MultipartFile file) throws IOException {
+<b class="nc">&nbsp;        logger.debug(&quot;Parsing Excel file: {}&quot;, file.getOriginalFilename());</b>
+<b class="nc">&nbsp;        List&lt;Employee&gt; employees = new ArrayList&lt;&gt;();</b>
+&nbsp;        Workbook workbook;
+&nbsp;
+<b class="nc">&nbsp;        try (InputStream inputStream = file.getInputStream()) {</b>
+<b class="nc">&nbsp;            if (file.getOriginalFilename().endsWith(&quot;.xlsx&quot;)) {</b>
+<b class="nc">&nbsp;                workbook = new XSSFWorkbook(inputStream);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                workbook = new HSSFWorkbook(inputStream);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            Sheet sheet = workbook.getSheetAt(0);</b>
+<b class="nc">&nbsp;            Iterator&lt;Row&gt; rowIterator = sheet.iterator();</b>
+&nbsp;
+<b class="nc">&nbsp;            boolean isFirstRow = true;</b>
+&nbsp;
+<b class="nc">&nbsp;            while (rowIterator.hasNext()) {</b>
+<b class="nc">&nbsp;                Row row = rowIterator.next();</b>
+&nbsp;
+<b class="nc">&nbsp;                if (isFirstRow) {</b>
+<b class="nc">&nbsp;                    isFirstRow = false;</b>
+&nbsp;
+<b class="nc">&nbsp;                    String name = getCellValueAsString(row.getCell(0)).trim().toLowerCase();</b>
+<b class="nc">&nbsp;                    String email = getCellValueAsString(row.getCell(1)).trim().toLowerCase();</b>
+<b class="nc">&nbsp;                    String dept = getCellValueAsString(row.getCell(2)).trim().toLowerCase();</b>
+<b class="nc">&nbsp;                    String salary = getCellValueAsString(row.getCell(3)).trim().toLowerCase();</b>
+&nbsp;
+<b class="nc">&nbsp;                    if (!name.equals(&quot;name&quot;) || !email.equals(&quot;email&quot;) || !dept.equals(&quot;department&quot;) || !salary.equals(&quot;salary&quot;)) {</b>
+<b class="nc">&nbsp;                        throw new InvalidFileHeaderException(&quot;Invalid Excel header. Expected: name, email, department, salary&quot;);</b>
+&nbsp;                    }
+&nbsp;                    continue;
+&nbsp;                }
+&nbsp;
+<b class="nc">&nbsp;                Employee emp = new Employee();</b>
+<b class="nc">&nbsp;                emp.setName(getCellValueAsString(row.getCell(0)));</b>
+<b class="nc">&nbsp;                emp.setEmail(getCellValueAsString(row.getCell(1)));</b>
+<b class="nc">&nbsp;                emp.setDepartment(getCellValueAsString(row.getCell(2)));</b>
+<b class="nc">&nbsp;                emp.setSalary(Double.parseDouble(getCellValueAsString(row.getCell(3))));</b>
+<b class="nc">&nbsp;                employees.add(emp);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+<b class="nc">&nbsp;        repository.saveAll(employees);</b>
+<b class="nc">&nbsp;        logger.info(&quot;Parsed and saved {} employees from Excel&quot;, employees.size());</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    private String getCellValueAsString(Cell cell) {
+<b class="nc">&nbsp;        if (cell == null) return &quot;&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        switch (cell.getCellType()) {</b>
+&nbsp;            case STRING:
+<b class="nc">&nbsp;                return cell.getStringCellValue();</b>
+&nbsp;            case NUMERIC:
+<b class="nc">&nbsp;                return String.valueOf(cell.getNumericCellValue());</b>
+&nbsp;            case BOOLEAN:
+<b class="nc">&nbsp;                return String.valueOf(cell.getBooleanCellValue());</b>
+&nbsp;            case FORMULA:
+<b class="nc">&nbsp;                return cell.getCellFormula();</b>
+&nbsp;            case BLANK:
+&nbsp;            default:
+<b class="nc">&nbsp;                return &quot;&quot;;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-05-21 10:35</div>
+</div>
+</body>
+</html>

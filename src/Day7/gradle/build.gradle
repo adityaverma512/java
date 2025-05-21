@@ -2,7 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.5'
 	id 'io.spring.dependency-management' version '1.1.7'
-	id 'jacoco' // ✅ Add JaCoCo plugin here
+	id 'jacoco'
 }
 
 group = 'com.example'
@@ -56,7 +56,7 @@ tasks.named('test') {
 	finalizedBy jacocoTestReport // ✅ Run JaCoCo report after tests
 }
 
-// ✅ JaCoCo Report Configuration
+// JaCoCo Report Configuration
 jacoco {
 	toolVersion = "0.8.10"
 }
@@ -68,17 +68,28 @@ jacocoTestReport {
 		csv.required = false
 		html.outputLocation = layout.buildDirectory.dir('jacocoHtml') // coverage report in build/jacocoHtml
 	}
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+					'**/config/**',
+					'**/model/**',
+					'**/dto/**',
+					'**/entity/**',
+					'**/Application.class'
+			])
+		}))
+	}
 }
 
 //jacocoTestCoverageVerification {
 //	violationRules {
 //		rule {
 //			limit {
-//				minimum = 0.85 // ✅ 85% minimum coverage required
+//				minimum = 0.85 // 85% minimum coverage required
 //			}
 //		}
 //	}
 //}
 
-// ✅ Optional: Fail build if coverage is too low
+//  Fail build if coverage is too low
 //check.dependsOn jacocoTestCoverageVerification

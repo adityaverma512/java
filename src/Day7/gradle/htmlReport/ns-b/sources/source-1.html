@@ -1,0 +1,101 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > EmployeeService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.gradle.Service</a>
+</div>
+
+<h1>Coverage Summary for Class: EmployeeService (com.example.gradle.Service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">EmployeeService$MockitoMock$TSFFsJyA</td>
+  </tr>
+  <tr>
+    <td class="name">EmployeeService$MockitoMock$TSFFsJyA$auxiliary$ag9SQxsL</td>
+  </tr>
+  <tr>
+    <td class="name">EmployeeService$MockitoMock$TSFFsJyA$auxiliary$cZvH1NaI</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.gradle.Service;
+&nbsp;
+&nbsp;import com.example.gradle.DTO.EmailDto;
+&nbsp;import com.example.gradle.DTO.EmployeeDto;
+&nbsp;import org.springframework.web.multipart.MultipartFile;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;public interface EmployeeService {
+&nbsp;    EmployeeDto addEmployee(EmployeeDto employeeDto);
+&nbsp;    List&lt;EmployeeDto&gt; getAllEmployees();
+&nbsp;    EmployeeDto getEmployeeById(Long id);
+&nbsp;    EmployeeDto updateEmployee(Long id, EmployeeDto employeeDto);
+&nbsp;    void deleteEmployee(Long id);
+&nbsp;    void importEmployeesFromCsv(MultipartFile file) throws IOException;
+&nbsp;    Optional&lt;EmployeeDto&gt; getEmployeeByEmail(String email);
+&nbsp;    List&lt;EmployeeDto&gt; getEmployeesByDepartment(String department);
+&nbsp;    List&lt;EmployeeDto&gt; getTop3HighestPaidEmployees();
+&nbsp;    public String emailByFiegnClient(EmailDto emailDto);
+&nbsp;    String emailByRestTemplate(EmailDto emailDto);
+&nbsp;    String emailByWebClient(EmailDto emailDto);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-05-21 10:35</div>
+</div>
+</body>
+</html>
