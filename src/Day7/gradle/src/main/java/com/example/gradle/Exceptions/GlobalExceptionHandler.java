@@ -33,6 +33,11 @@ public class GlobalExceptionHandler {
         logger.warn("InvalidFileFormatException: {} at {}", ex.getMessage(), request.getRequestURI());
         return buildErrorResponse(ex, HttpStatus.BAD_REQUEST, request.getRequestURI());
     }
+    @ExceptionHandler(InvalidFileHeaderException.class)
+    public ResponseEntity<ErrorResponseDto> handleInvalidFileHeader(InvalidFileHeaderException ex, HttpServletRequest request) {
+        logger.warn("InvalidFileHeaderException: {} at {}", ex.getMessage(), request.getRequestURI());
+        return buildErrorResponse(ex, HttpStatus.BAD_REQUEST, request.getRequestURI());
+    }
 
     private ResponseEntity<ErrorResponseDto> buildErrorResponse(Exception ex, HttpStatus status, String path) {
         ErrorResponseDto error = new ErrorResponseDto(

@@ -6,34 +6,50 @@ import com.example.gradle.Service.EmployeeService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import jakarta.annotation.Resource;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(EmployeeController.class)
+@Import(EmployeeControllerTest.TestConfig.class)
 class EmployeeControllerTest {
 
     @Resource private MockMvc mockMvc;
 
-    @MockBean private EmployeeService service;
+    @Resource private EmployeeService service;
+
+    @Configuration
+    static class TestConfig {
+        @Bean
+        public EmployeeService employeeService() {
+            return Mockito.mock(EmployeeService.class);
+        }
+
+        @Bean
+        public EmployeeController employeeController(EmployeeService employeeService) {
+            return new EmployeeController(employeeService);
+        }
+    }
 
     @Test
     void addEmployee_ShouldReturnCreated() throws Exception {
         EmployeeDto dto = new EmployeeDto(1L, "John", "john@example.com", "HR", 10000.0);
         when(service.addEmployee(any())).thenReturn(dto);
 
-        mockMvc.perform(post("/api/employees")
+        mockMvc.perform(post("/api/employees/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                         {
@@ -50,7 +66,7 @@ class EmployeeControllerTest {
     @Test
     void getAllEmployees_ShouldReturnList() throws Exception {
         when(service.getAllEmployees()).thenReturn(Arrays.asList(new EmployeeDto()));
-        mockMvc.perform(get("/api/employees"))
+        mockMvc.perform(get("/api/employees/all"))
                 .andExpect(status().isOk());
     }
 
@@ -106,4 +122,3 @@ class EmployeeControllerTest {
                 .andExpect(status().isOk());
     }
 }
-

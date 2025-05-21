@@ -50,7 +50,7 @@ public class EmployeeIntegrationTest {
     public void testAddEmployee() {
         EmployeeDto newEmp = new EmployeeDto(null, "Mike Green", "mike@example.com", "IT", 85000.0);
 
-        ResponseEntity<EmployeeDto> response = restTemplate.postForEntity(baseUrl, newEmp, EmployeeDto.class);
+        ResponseEntity<EmployeeDto> response = restTemplate.postForEntity(baseUrl +"/add", newEmp, EmployeeDto.class);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -59,7 +59,7 @@ public class EmployeeIntegrationTest {
 
     @Test
     public void testGetAllEmployees() {
-        ResponseEntity<EmployeeDto[]> response = restTemplate.getForEntity(baseUrl, EmployeeDto[].class);
+        ResponseEntity<EmployeeDto[]> response = restTemplate.getForEntity(baseUrl+"/all", EmployeeDto[].class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody().length >= 4);
     }

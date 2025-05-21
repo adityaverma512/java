@@ -5,6 +5,7 @@ import com.example.gradle.DTO.EmployeeDto;
 import com.example.gradle.Entity.Employee;
 import com.example.gradle.Exceptions.EmployeeNotFoundException;
 import com.example.gradle.Exceptions.InvalidFileFormatException;
+import com.example.gradle.Exceptions.InvalidFileHeaderException;
 import com.example.gradle.Mapper.EmployeeMapper;
 import com.example.gradle.Repository.EmployeeRepository;
 import com.example.gradle.Service.EmployeeService;
@@ -200,21 +201,26 @@ public class EmployeeServiceImpl implements EmployeeService {
             boolean isFirstLine = true;
 
             while ((line = reader.readLine()) != null) {
+                String[] fields = line.split(",");
+
                 if (isFirstLine) {
                     isFirstLine = false;
+                    if (fields.length < 4 ||
+                            !fields[0].trim().equalsIgnoreCase("name") ||
+                            !fields[1].trim().equalsIgnoreCase("email") ||
+                            !fields[2].trim().equalsIgnoreCase("department") ||
+                            !fields[3].trim().equalsIgnoreCase("salary")) {
+                        throw new InvalidFileHeaderException("Invalid CSV header. Expected: name,email,department,salary");
+                    }
                     continue;
                 }
 
-                String[] fields = line.split(",");
-
-                if (fields.length >= 4) {
-                    Employee emp = new Employee();
-                    emp.setName(fields[0].trim());
-                    emp.setEmail(fields[1].trim());
-                    emp.setDepartment(fields[2].trim());
-                    emp.setSalary(Double.parseDouble(fields[3].trim()));
-                    employees.add(emp);
-                }
+                Employee emp = new Employee();
+                emp.setName(fields[0].trim());
+                emp.setEmail(fields[1].trim());
+                emp.setDepartment(fields[2].trim());
+                emp.setSalary(Double.parseDouble(fields[3].trim()));
+                employees.add(emp);
             }
         }
 
@@ -244,6 +250,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
                 if (isFirstRow) {
                     isFirstRow = false;
+
+                    String name = getCellValueAsString(row.getCell(0)).trim().toLowerCase();
+                    String email = getCellValueAsString(row.getCell(1)).trim().toLowerCase();
+                    String dept = getCellValueAsString(row.getCell(2)).trim().toLowerCase();
+                    String salary = getCellValueAsString(row.getCell(3)).trim().toLowerCase();
+
+                    if (!name.equals("name") || !email.equals("email") || !dept.equals("department") || !salary.equals("salary")) {
+                        throw new InvalidFileHeaderException("Invalid Excel header. Expected: name, email, department, salary");
+                    }
                     continue;
                 }
 

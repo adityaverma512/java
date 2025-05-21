@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.5'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'jacoco' // ✅ Add JaCoCo plugin here
 }
 
 group = 'com.example'
@@ -31,30 +32,53 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.2.1'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	//implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.1.0'
-
+	implementation 'org.springframework.kafka:spring-kafka'
 
 	// OpenAPI docs
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
 	// --- Testing Dependencies ---
-
-	// Includes: JUnit, Mockito, Spring Boot test annotations like @SpringBootTest, @MockBean, etc.
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-	// Optional: Useful if you directly want Mockito Core (already included above, but you can make it explicit)
 	testImplementation 'org.mockito:mockito-core'
-
-	// Optional: Use Testcontainers for advanced integration testing (e.g., with real DBs)
 	testImplementation 'org.testcontainers:junit-jupiter'
-
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
-//dependencyManagement {
-//	imports {
-//		mavenBom "org.springframework.cloud:spring-cloud-dependencies:2021.0.8"
-//	}
-//}
+
+// Uncomment if using Spring Cloud BOM
+// dependencyManagement {
+// 	imports {
+// 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:2021.0.8"
+// 	}
+// }
 
 tasks.named('test') {
 	useJUnitPlatform()
+	finalizedBy jacocoTestReport // ✅ Run JaCoCo report after tests
 }
+
+// ✅ JaCoCo Report Configuration
+jacoco {
+	toolVersion = "0.8.10"
+}
+
+jacocoTestReport {
+	dependsOn test // tests are required to run before generating the report
+	reports {
+		xml.required = true
+		csv.required = false
+		html.outputLocation = layout.buildDirectory.dir('jacocoHtml') // coverage report in build/jacocoHtml
+	}
+}
+
+//jacocoTestCoverageVerification {
+//	violationRules {
+//		rule {
+//			limit {
+//				minimum = 0.85 // ✅ 85% minimum coverage required
+//			}
+//		}
+//	}
+//}
+
+// ✅ Optional: Fail build if coverage is too low
+//check.dependsOn jacocoTestCoverageVerification
