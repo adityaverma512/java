@@ -1,0 +1,12 @@
+ID,Name,Description,Price,Quantity,Category,Created At,Updated At
+483fce18-6d91-4795-b2c9-84ca7945305f,Nike Dri-FIT T-Shirt,Moisture-wicking athletic shirt,29.99,500,Clothing,2025-05-30T00:17:15.723109400,2025-05-30T00:17:15.723109400
+687c0ea2-9439-4634-87ea-dc0c88737a1d,AirPods Pro 2,Apple's premium wireless earbuds,249.99,150,Audio,2025-05-30T00:17:14.892056900,2025-05-30T00:17:14.892056900
+75621569-e396-4e6f-bb82-1aa54fecc05e,Adidas Ultraboost 22,High-performance running shoes,189.99,150,Footwear,2025-05-30T00:17:15.303047800,2025-05-30T00:17:15.303047800
+7ae9112b-5dff-40e6-b59c-ae29492b04f6,Dell XPS 13,Premium ultrabook for professionals,1099.99,30,Computers,2025-05-30T00:17:14.491423100,2025-05-30T00:17:14.491423100
+86e32bb3-fab7-4e3e-8581-34af98bbe59b,Samsung Galaxy S24,Flagship Android phone with AI features,899.99,75,Electronics,2025-05-30T00:17:14.082422600,2025-05-30T00:17:14.082422600
+989aaa7d-4e78-4007-ac73-6a51311d3adf,Levi's 501 Jeans,Classic straight-leg denim jeans,79.99,300,Clothing,2025-05-30T00:17:15.515089800,2025-05-30T00:17:15.515089800
+a430fe64-ec5b-4c45-8c79-7cc6e87a1ae7,Desktop,sample laptop,75000,1,Electronics,2025-05-29T18:01:44.113807800,2025-05-29T18:01:44.113807800
+a8bf436e-59bb-4149-8e65-333a1c6b03a5,iPhone 15 Pro,Latest Apple smartphone with titanium design,999.99,50,Electronics,2025-05-30T00:17:13.499432300,2025-05-30T00:17:13.499432300
+ae51b245-bb21-4ef6-b5cc-5963e16f3514,Nike Air Max 270,Comfortable running shoes,129.99,200,Footwear,2025-05-30T00:17:15.098055400,2025-05-30T00:17:15.098055400
+b6e79a9b-bc0b-43af-9145-143d148e2bf4,MacBook Air M3,Lightweight laptop with M3 chip,1199.99,25,Computers,2025-05-30T00:17:14.284429700,2025-05-30T00:17:14.284429700
+f4e116ff-207c-4518-a3c9-4a1b7b305ba1,Sony WH-1000XM5,Noise-canceling wireless headphones,399.99,100,Audio,2025-05-30T00:17:14.688101,2025-05-30T00:17:14.688101

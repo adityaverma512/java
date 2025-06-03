@@ -1,0 +1,11 @@
+name,description,price,quantity,category
+iPhone 15 Pro,Latest Apple smartphone,999.99,50,Electronics
+,Missing name product,199.99,10,Electronics
+Samsung Galaxy,Valid product,invalid_price,20,Electronics
+Tablet Product,Good tablet,-50.99,15,Electronics
+Laptop Product,Good laptop,1200.00,-10,Computers
+Valid Product,This is valid,299.99,25,
+Another Product,Good product,0,30,Electronics
+"Product, with comma",Description with special chars,149.99,40,Electronics
+Duplicate Product,First instance,99.99,10,Test
+Duplicate Product,Second instance - should fail,199.99,20,Test
